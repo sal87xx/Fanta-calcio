@@ -1,8 +1,13 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { 
+import {
 getFirestore,
 collection,
-addDoc
+getDocs,
+addDoc,
+deleteDoc,
+doc,
+query,
+orderBy
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
@@ -20,7 +25,7 @@ const db = getFirestore(app);
 const passwordAdmin = "1234";
 
 
-// LOGIN ADMIN
+// LOGIN
 window.entra = function(){
 
 let password =
@@ -33,6 +38,9 @@ document.getElementById("login").style.display="none";
 
 document.getElementById("pannello").style.display="block";
 
+caricaGiocatori();
+
+
 }else{
 
 alert("Password errata");
@@ -42,33 +50,112 @@ alert("Password errata");
 };
 
 
-// SALVA PARTITA
-window.salvaPartita = async function(){
 
-let data =
-document.getElementById("data").value;
-
-let ora =
-document.getElementById("ora").value;
-
-let campo =
-document.getElementById("campo").value;
-
-let quota =
-document.getElementById("quota").value;
+// CARICA GIOCATORI
+async function caricaGiocatori(){
 
 
-await addDoc(collection(db,"partita"),{
+const elenco = await getDocs(
+query(
+collection(db,"giocatori"),
+orderBy("data")
+)
+);
 
-nomePartita:"Fanta Calcetto",
-data:data,
-ora:ora,
-campo:campo,
-quota:quota
+
+let convocati =
+document.getElementById("convocati");
+
+
+let attesa =
+document.getElementById("attesa");
+
+
+convocati.innerHTML="";
+attesa.innerHTML="";
+
+
+
+elenco.forEach((g)=>{
+
+
+let dati=g.data();
+
+
+let li=document.createElement("li");
+
+
+li.innerHTML =
+dati.nome +
+" <button onclick=\"elimina('" + g.id + "')\">❌</button>";
+
+
+
+if(dati.stato==="confermato"){
+
+convocati.appendChild(li);
+
+}else{
+
+attesa.appendChild(li);
+
+}
+
 
 });
 
 
+}
+
+
+
+// ELIMINA GIOCATORE
+window.elimina = async function(id){
+
+
+await deleteDoc(
+doc(db,"giocatori",id)
+);
+
+
+caricaGiocatori();
+
+
+};
+
+
+
+// SALVA PARTITA
+window.salvaPartita = async function(){
+
+
+let dati={
+
+data:
+document.getElementById("data").value,
+
+ora:
+document.getElementById("ora").value,
+
+campo:
+document.getElementById("campo").value,
+
+quota:
+document.getElementById("quota").value,
+
+nomePartita:
+"Fanta Calcetto"
+
+};
+
+
+await addDoc(
+collection(db,"partita"),
+dati
+);
+
+
 alert("Partita salvata!");
+
 
 };
