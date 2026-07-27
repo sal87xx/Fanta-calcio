@@ -4,6 +4,7 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Admin Fanta Calcetto</title>
@@ -14,6 +15,7 @@
 
 
 <body>
+
 
 <h1>👑 Admin Fanta Calcetto</h1>
 
@@ -29,14 +31,16 @@
 🔐 Entra
 </button>
 
+
 </div>
+
 
 
 
 <div id="pannello" style="display:none">
 
 
-<h2>⚽ Gestione partita</h2>
+<h2>⚽ Partita attuale</h2>
 
 
 <input id="data" placeholder="Data">
@@ -49,7 +53,35 @@
 
 
 <button onclick="salvaPartita()">
-💾 Salva partita
+💾 Aggiorna partita
+</button>
+
+
+
+<hr>
+
+
+
+<h2>📅 Aggiungi al calendario</h2>
+
+
+<input id="calData" placeholder="Data partita">
+
+
+<input id="calOra" placeholder="Ora">
+
+
+<input id="calCampo" placeholder="Campo">
+
+
+<input id="calQuota" placeholder="Quota">
+
+
+
+<button onclick="aggiungiCalendario()">
+
+➕ Salva nel calendario
+
 </button>
 
 
@@ -62,9 +94,11 @@
 <ul id="convocati"></ul>
 
 
+
 <h3>⏳ Lista d'attesa</h3>
 
 <ul id="attesa"></ul>
+
 
 
 </div>
@@ -72,6 +106,7 @@
 
 
 <script type="module" src="./admin.js"></script>
+
 
 
 </body>
