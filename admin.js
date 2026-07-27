@@ -28,6 +28,7 @@ projectId: "calcettoapp-b00eb"
 };
 
 
+
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
@@ -35,8 +36,6 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 
 
-
-const giocatori = collection(db,"giocatori");
 
 
 
@@ -74,7 +73,7 @@ catch(error){
 
 console.log(error);
 
-alert("Email o password errati");
+alert("❌ Email o password errati");
 
 }
 
@@ -84,6 +83,9 @@ alert("Email o password errati");
 
 
 
+
+
+// CONTROLLO ACCESSO
 
 onAuthStateChanged(auth,(user)=>{
 
@@ -101,6 +103,7 @@ mostraAdmin();
 
 
 
+
 function mostraAdmin(){
 
 
@@ -112,6 +115,8 @@ document.getElementById("pannello").style.display="block";
 
 caricaGiocatori();
 
+caricaCalendario();
+
 
 }
 
@@ -121,14 +126,15 @@ caricaGiocatori();
 
 
 
-// CARICA GIOCATORI
+
+// GIOCATORI
 
 async function caricaGiocatori(){
 
 
 const elenco = await getDocs(
 query(
-giocatori,
+collection(db,"giocatori"),
 orderBy("data")
 )
 );
@@ -144,7 +150,8 @@ document.getElementById("attesa");
 
 
 
-if(!convocati || !attesa) return;
+if(!convocati || !attesa)
+return;
 
 
 
@@ -157,7 +164,7 @@ attesa.innerHTML="";
 elenco.forEach((g)=>{
 
 
-let dati = g.data();
+let dati=g.data();
 
 
 let li=document.createElement("li");
@@ -194,7 +201,7 @@ attesa.appendChild(li);
 
 
 
-// ELIMINA GIOCATORE
+
 
 window.elimina = async function(id){
 
@@ -215,7 +222,8 @@ caricaGiocatori();
 
 
 
-// SALVA PARTITA
+
+// PARTITA ATTUALE
 
 window.salvaPartita = async function(){
 
@@ -224,7 +232,6 @@ let dati={
 
 
 nomePartita:"Fanta Calcetto",
-
 
 data:
 document.getElementById("data").value,
@@ -246,7 +253,7 @@ document.getElementById("quota").value
 
 
 
-const elenco =
+let elenco =
 await getDocs(
 collection(db,"partita")
 );
@@ -279,6 +286,181 @@ dati
 
 
 alert("✅ Partita aggiornata");
+
+
+};
+
+
+
+
+
+
+
+
+// AGGIUNGI CALENDARIO
+
+window.aggiungiCalendario = async function(){
+
+
+let partita={
+
+
+data:
+document.getElementById("calData").value,
+
+
+ora:
+document.getElementById("calOra").value,
+
+
+campo:
+document.getElementById("calCampo").value,
+
+
+quota:
+document.getElementById("calQuota").value,
+
+
+creata:new Date()
+
+
+};
+
+
+
+if(
+partita.data==="" ||
+partita.ora==="" ||
+partita.campo===""
+){
+
+
+alert("⚠️ Inserisci data, ora e campo");
+
+return;
+
+}
+
+
+
+await addDoc(
+
+collection(db,"calendario"),
+
+partita
+
+);
+
+
+
+alert("✅ Partita aggiunta al calendario");
+
+
+caricaCalendario();
+
+
+};
+
+
+
+
+
+
+
+
+// MOSTRA CALENDARIO
+
+async function caricaCalendario(){
+
+
+let lista =
+document.getElementById("listaCalendario");
+
+
+if(!lista)
+return;
+
+
+
+lista.innerHTML="";
+
+
+let elenco =
+await getDocs(
+collection(db,"calendario")
+);
+
+
+
+elenco.forEach((p)=>{
+
+
+let dati=p.data();
+
+
+
+let li=document.createElement("li");
+
+
+
+li.innerHTML =
+`
+📅 ${dati.data}
+<br>
+🕘 ${dati.ora}
+<br>
+🏟️ ${dati.campo}
+<br>
+💰 ${dati.quota || "-"}
+<br>
+
+<button onclick="cancellaCalendario('${p.id}')">
+❌ Cancella
+</button>
+
+<hr>
+`;
+
+
+
+lista.appendChild(li);
+
+
+});
+
+
+}
+
+
+
+
+
+
+
+
+// CANCELLA CALENDARIO
+
+window.cancellaCalendario = async function(id){
+
+
+let conferma =
+confirm("Vuoi cancellare questa partita?");
+
+
+
+if(conferma){
+
+
+await deleteDoc(
+doc(db,"calendario",id)
+);
+
+
+
+caricaCalendario();
+
+
+}
 
 
 };
