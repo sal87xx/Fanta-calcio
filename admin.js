@@ -21,11 +21,10 @@ onAuthStateChanged
 
 
 const firebaseConfig = {
-apiKey: "AIzaSyAkD7WyZj7aq3YXBak6cLT8kKUAAvwbSUY",
-authDomain: "calcettoapp-b00eb.firebaseapp.com",
-projectId: "calcettoapp-b00eb"
+  apiKey: "AIzaSyAkD7WyZj7aq3YXBak6cLT8kKUAAvwbSUY",
+  authDomain: "calcettoapp-b00eb.firebaseapp.com",
+  projectId: "calcettoapp-b00eb"
 };
-
 
 
 const app = initializeApp(firebaseConfig);
@@ -36,28 +35,18 @@ const auth = getAuth(app);
 
 
 
-const giocatori = collection(db,"giocatori");
 
 
-
-
-
-// LOGIN ADMIN
+// LOGIN
 
 window.entra = async function(){
 
+let email = document.getElementById("email").value;
 
-const email =
-document.getElementById("email").value;
-
-
-const password =
-document.getElementById("password").value;
-
+let password = document.getElementById("password").value;
 
 
 try{
-
 
 await signInWithEmailAndPassword(
 auth,
@@ -66,49 +55,7 @@ password
 );
 
 
-mostraAdmin();
-
-
-}
-
-catch(error){
-
-console.log(error);
-
-alert("❌ Email o password errati");
-
-}
-
-
-};
-
-
-
-
-
-
-onAuthStateChanged(auth,(user)=>{
-
-
-if(user){
-
-mostraAdmin();
-
-}
-
-
-});
-
-
-
-
-
-
-function mostraAdmin(){
-
-
 document.getElementById("login").style.display="none";
-
 
 document.getElementById("pannello").style.display="block";
 
@@ -118,38 +65,60 @@ caricaGiocatori();
 
 }
 
+catch(error){
+
+console.log(error);
+
+alert("❌ Login non riuscito");
+
+}
+
+};
+
+
+
+
+
+// CONTROLLO SESSIONE
+
+onAuthStateChanged(auth,(user)=>{
+
+if(user){
+
+document.getElementById("login").style.display="none";
+
+document.getElementById("pannello").style.display="block";
+
+caricaGiocatori();
+
+}
+
+});
 
 
 
 
 
 
-// CARICA GIOCATORI
+
+// GIOCATORI
 
 async function caricaGiocatori(){
 
-
 const elenco = await getDocs(
 query(
-giocatori,
+collection(db,"giocatori"),
 orderBy("data")
 )
 );
 
 
+let convocati=document.getElementById("convocati");
 
-const convocati =
-document.getElementById("convocati");
-
-
-const attesa =
-document.getElementById("attesa");
+let attesa=document.getElementById("attesa");
 
 
-
-if(!convocati || !attesa)
-return;
-
+if(!convocati || !attesa) return;
 
 
 convocati.innerHTML="";
@@ -168,12 +137,8 @@ let li=document.createElement("li");
 
 
 li.innerHTML =
-`
-${dati.nome}
-<button onclick="elimina('${g.id}')">
-❌
-</button>
-`;
+dati.nome +
+` <button onclick="elimina('${g.id}')">❌</button>`;
 
 
 
@@ -198,19 +163,15 @@ attesa.appendChild(li);
 
 
 
-
-// ELIMINA GIOCATORE
+// ELIMINA
 
 window.elimina = async function(id){
-
 
 await deleteDoc(
 doc(db,"giocatori",id)
 );
 
-
 caricaGiocatori();
-
 
 };
 
@@ -220,35 +181,28 @@ caricaGiocatori();
 
 
 
-// SALVA PARTITA ATTUALE
+// PARTITA ATTUALE
 
 window.salvaPartita = async function(){
 
 
-const partita = {
-
+let dati={
 
 nomePartita:"Fanta Calcetto",
 
-data:
-document.getElementById("data").value,
+data:document.getElementById("data").value,
 
-ora:
-document.getElementById("ora").value,
+ora:document.getElementById("ora").value,
 
-campo:
-document.getElementById("campo").value,
+campo:document.getElementById("campo").value,
 
-quota:
-document.getElementById("quota").value
-
+quota:document.getElementById("quota").value
 
 };
 
 
 
-const elenco =
-await getDocs(
+let elenco=await getDocs(
 collection(db,"partita")
 );
 
@@ -256,28 +210,22 @@ collection(db,"partita")
 
 if(elenco.empty){
 
-
 await addDoc(
 collection(db,"partita"),
-partita
+dati
 );
-
 
 }else{
 
-
 await updateDoc(
 doc(db,"partita",elenco.docs[0].id),
-partita
+dati
 );
-
 
 }
 
 
-
 alert("✅ Partita aggiornata");
-
 
 };
 
@@ -287,48 +235,34 @@ alert("✅ Partita aggiornata");
 
 
 
-// AGGIUNGI AL CALENDARIO
+// CALENDARIO
 
 window.aggiungiCalendario = async function(){
 
 
+let dati={
 
-const nuova = {
+data:document.getElementById("calData").value,
 
+ora:document.getElementById("calOra").value,
 
-data:
-document.getElementById("calData").value,
+campo:document.getElementById("calCampo").value,
 
+quota:document.getElementById("calQuota").value,
 
-ora:
-document.getElementById("calOra").value,
-
-
-campo:
-document.getElementById("calCampo").value,
-
-
-quota:
-document.getElementById("calQuota").value,
-
-
-creata:
-new Date()
-
+creata:new Date()
 
 };
 
 
 
-
 if(
-nuova.data==="" ||
-nuova.ora==="" ||
-nuova.campo===""
+dati.data==="" ||
+dati.ora==="" ||
+dati.campo===""
 ){
 
-
-alert("⚠️ Inserisci data, ora e campo");
+alert("Inserisci data, ora e campo");
 
 return;
 
@@ -338,9 +272,8 @@ return;
 
 await addDoc(
 collection(db,"calendario"),
-nuova
+dati
 );
-
 
 
 alert("✅ Partita aggiunta al calendario");
