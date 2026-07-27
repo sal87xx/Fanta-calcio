@@ -12,13 +12,11 @@ orderBy,
 updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-
 import {
 getAuth,
 signInWithEmailAndPassword,
 onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
 
 
 const firebaseConfig = {
@@ -28,12 +26,13 @@ projectId: "calcettoapp-b00eb"
 };
 
 
-
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
 const auth = getAuth(app);
+
+
 
 const giocatori = collection(db,"giocatori");
 
@@ -41,7 +40,7 @@ const giocatori = collection(db,"giocatori");
 
 
 
-// LOGIN ADMIN
+// LOGIN
 
 window.entra = async function(){
 
@@ -74,7 +73,7 @@ catch(error){
 
 console.log(error);
 
-alert("❌ Email o password errati");
+alert("Email o password errati");
 
 }
 
@@ -87,7 +86,7 @@ alert("❌ Email o password errati");
 
 
 
-// CONTROLLO SESSIONE
+// CONTROLLO ACCESSO
 
 onAuthStateChanged(auth,(user)=>{
 
@@ -127,7 +126,7 @@ caricaGiocatori();
 
 
 
-// CARICA GIOCATORI
+// GIOCATORI
 
 async function caricaGiocatori(){
 
@@ -151,7 +150,8 @@ document.getElementById("attesa");
 
 
 
-if(!convocati || !attesa) return;
+if(!convocati || !attesa)
+return;
 
 
 
@@ -164,10 +164,10 @@ attesa.innerHTML="";
 elenco.forEach((g)=>{
 
 
-let dati=g.data();
+let dati = g.data();
 
 
-let li=document.createElement("li");
+let li = document.createElement("li");
 
 
 li.innerHTML =
@@ -175,9 +175,7 @@ li.innerHTML =
 ${dati.nome}
 
 <button onclick="elimina('${g.id}')">
-
 ❌
-
 </button>
 `;
 
@@ -185,15 +183,11 @@ ${dati.nome}
 
 if(dati.stato==="confermato"){
 
-
 convocati.appendChild(li);
-
 
 }else{
 
-
 attesa.appendChild(li);
-
 
 }
 
@@ -209,7 +203,8 @@ attesa.appendChild(li);
 
 
 
-// ELIMINA GIOCATORE
+
+// ELIMINA
 
 window.elimina = async function(id){
 
@@ -223,6 +218,7 @@ caricaGiocatori();
 
 
 };
+
 
 
 
