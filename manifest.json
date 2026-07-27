@@ -1,0 +1,16 @@
+{
+  "name": "Fanta Calcetto",
+  "short_name": "Fanta Calcetto",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0b3d2e",
+  "theme_color": "#0b3d2e",
+  "lang": "it",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
