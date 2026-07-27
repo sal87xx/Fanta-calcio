@@ -3,28 +3,25 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import {
 getFirestore,
 collection,
-getDocs,
 addDoc,
-deleteDoc,
-doc,
+getDocs,
 query,
 orderBy,
+deleteDoc,
+doc,
 updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-import {
-getAuth,
-signInWithEmailAndPassword,
-onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-
 
 const firebaseConfig = {
+
 apiKey: "AIzaSyAkD7WyZj7aq3YXBak6cLT8kKUAAvwbSUY",
+
 authDomain: "calcettoapp-b00eb.firebaseapp.com",
+
 projectId: "calcettoapp-b00eb"
+
 };
 
 
@@ -33,49 +30,76 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
-const auth = getAuth(app);
+
+
+const giocatori =
+collection(db,"giocatori");
 
 
 
 
 
+// ISCRIZIONE
 
-// LOGIN
-
-window.entra = async function(){
-
-
-let email =
-document.getElementById("email").value;
+window.iscriviti = async function(){
 
 
-let password =
-document.getElementById("password").value;
+let nome =
+document.getElementById("nome").value.trim();
 
 
 
-try{
+if(nome===""){
+
+alert("Inserisci il nome");
+
+return;
+
+}
 
 
-await signInWithEmailAndPassword(
-auth,
-email,
-password
+
+const elenco =
+await getDocs(giocatori);
+
+
+
+let confermati=0;
+
+
+
+elenco.forEach((g)=>{
+
+if(g.data().stato==="confermato"){
+
+confermati++;
+
+}
+
+});
+
+
+
+let stato =
+confermati < 10 ? "confermato" : "attesa";
+
+
+
+await addDoc(
+giocatori,
+{
+nome:nome,
+stato:stato,
+data:new Date()
+}
 );
 
 
-mostraAdmin();
+
+document.getElementById("nome").value="";
 
 
-}
-
-catch(error){
-
-console.log(error);
-
-alert("❌ Email o password errati");
-
-}
+mostraGiocatori();
 
 
 };
@@ -85,58 +109,107 @@ alert("❌ Email o password errati");
 
 
 
-// CONTROLLO ACCESSO
-
-onAuthStateChanged(auth,(user)=>{
 
 
-if(user){
+// CANCELLA
 
-mostraAdmin();
+window.cancella = async function(id){
+
+
+await deleteDoc(
+doc(db,"giocatori",id)
+);
+
+
+await promuoviAttesa();
+
+
+};
+
+
+
+
+
+
+
+async function promuoviAttesa(){
+
+
+const elenco =
+await getDocs(
+query(giocatori,orderBy("data"))
+);
+
+
+
+let confermati=0;
+
+
+
+elenco.forEach((g)=>{
+
+if(g.data().stato==="confermato"){
+
+confermati++;
 
 }
-
 
 });
 
 
 
+for(let g of elenco.docs){
+
+
+if(confermati>=10)
+break;
 
 
 
-function mostraAdmin(){
+if(g.data().stato==="attesa"){
 
 
-document.getElementById("login").style.display="none";
+await updateDoc(
+
+doc(db,"giocatori",g.id),
+
+{
+stato:"confermato"
+}
+
+);
 
 
-document.getElementById("pannello").style.display="block";
+confermati++;
 
 
-caricaGiocatori();
-
-caricaCalendario();
+}
 
 
 }
 
 
 
+mostraGiocatori();
+
+
+};
 
 
 
 
 
-// GIOCATORI
-
-async function caricaGiocatori(){
 
 
-const elenco = await getDocs(
-query(
-collection(db,"giocatori"),
-orderBy("data")
-)
+
+// MOSTRA GIOCATORI
+
+async function mostraGiocatori(){
+
+
+const elenco =
+await getDocs(
+query(giocatori,orderBy("data"))
 );
 
 
@@ -150,14 +223,13 @@ document.getElementById("attesa");
 
 
 
-if(!convocati || !attesa)
-return;
-
-
-
 convocati.innerHTML="";
 
 attesa.innerHTML="";
+
+
+
+let confermati=0;
 
 
 
@@ -167,51 +239,70 @@ elenco.forEach((g)=>{
 let dati=g.data();
 
 
+
 let li=document.createElement("li");
 
 
-li.innerHTML =
-`
-${dati.nome}
 
-<button onclick="elimina('${g.id}')">
+if(dati.stato==="confermato"){
+
+
+confermati++;
+
+
+li.innerHTML="✅ "+dati.nome;
+
+
+convocati.appendChild(li);
+
+
+}else{
+
+
+li.innerHTML="⏳ "+dati.nome;
+
+
+attesa.appendChild(li);
+
+
+}
+
+
+
+li.innerHTML +=
+`
+<button onclick="cancella('${g.id}')">
 ❌
 </button>
 `;
 
 
 
-if(dati.stato==="confermato"){
-
-convocati.appendChild(li);
-
-}else{
-
-attesa.appendChild(li);
-
-}
-
-
 });
 
 
+
+
+document.getElementById("posti").textContent =
+confermati+"/10";
+
+
+
+if(confermati>=10){
+
+
+document.getElementById("infoCompleta").innerHTML =
+"⚽ Partita completa - Lista d'attesa aperta";
+
+
+}else{
+
+
+document.getElementById("infoCompleta").innerHTML="";
+
+
 }
 
-
-
-
-
-
-
-window.elimina = async function(id){
-
-
-await deleteDoc(
-doc(db,"giocatori",id)
-);
-
-
-caricaGiocatori();
 
 
 };
@@ -225,138 +316,42 @@ caricaGiocatori();
 
 // PARTITA ATTUALE
 
-window.salvaPartita = async function(){
+async function caricaPartita(){
 
 
-let dati={
-
-
-nomePartita:"Fanta Calcetto",
-
-data:
-document.getElementById("data").value,
-
-
-ora:
-document.getElementById("ora").value,
-
-
-campo:
-document.getElementById("campo").value,
-
-
-quota:
-document.getElementById("quota").value
-
-
-};
-
-
-
-let elenco =
+const elenco =
 await getDocs(
 collection(db,"partita")
 );
 
 
 
-if(elenco.empty){
+elenco.forEach((p)=>{
 
 
-await addDoc(
-collection(db,"partita"),
-dati
-);
-
-
-}else{
-
-
-await updateDoc(
-
-doc(db,"partita",elenco.docs[0].id),
-
-dati
-
-);
-
-
-}
+let partita=p.data();
 
 
 
-alert("✅ Partita aggiornata");
+document.getElementById("infoPartita").innerHTML =
 
+`
 
-};
+<h3>⚽ ${partita.nomePartita || "Fanta Calcetto"}</h3>
 
+📅 ${partita.data || "-"}<br>
 
+🕘 ${partita.ora || "-"}<br>
 
+🏟️ ${partita.campo || "-"}<br>
 
+💰 Quota: ${partita.quota || "-"}
 
-
-
-
-// AGGIUNGI CALENDARIO
-
-window.aggiungiCalendario = async function(){
-
-
-let partita={
-
-
-data:
-document.getElementById("calData").value,
-
-
-ora:
-document.getElementById("calOra").value,
-
-
-campo:
-document.getElementById("calCampo").value,
-
-
-quota:
-document.getElementById("calQuota").value,
-
-
-creata:new Date()
-
-
-};
+`;
 
 
 
-if(
-partita.data==="" ||
-partita.ora==="" ||
-partita.campo===""
-){
-
-
-alert("⚠️ Inserisci data, ora e campo");
-
-return;
-
-}
-
-
-
-await addDoc(
-
-collection(db,"calendario"),
-
-partita
-
-);
-
-
-
-alert("✅ Partita aggiunta al calendario");
-
-
-caricaCalendario();
+});
 
 
 };
@@ -368,13 +363,14 @@ caricaCalendario();
 
 
 
-// MOSTRA CALENDARIO
+// CALENDARIO PUBBLICO
 
 async function caricaCalendario(){
 
 
 let lista =
-document.getElementById("listaCalendario");
+document.getElementById("calendarioPartite");
+
 
 
 if(!lista)
@@ -385,17 +381,32 @@ return;
 lista.innerHTML="";
 
 
-let elenco =
+
+const elenco =
 await getDocs(
 collection(db,"calendario")
 );
 
 
 
+if(elenco.empty){
+
+
+lista.innerHTML =
+"<li>Nessuna partita programmata</li>";
+
+
+return;
+
+
+}
+
+
+
 elenco.forEach((p)=>{
 
 
-let dati=p.data();
+let partita=p.data();
 
 
 
@@ -405,20 +416,23 @@ let li=document.createElement("li");
 
 li.innerHTML =
 `
-📅 ${dati.data}
-<br>
-🕘 ${dati.ora}
-<br>
-🏟️ ${dati.campo}
-<br>
-💰 ${dati.quota || "-"}
+
+📅 ${partita.data}
+
 <br>
 
-<button onclick="cancellaCalendario('${p.id}')">
-❌ Cancella
-</button>
+🕘 ${partita.ora}
+
+<br>
+
+🏟️ ${partita.campo}
+
+<br>
+
+💰 Quota: ${partita.quota || "-"}
 
 <hr>
+
 `;
 
 
@@ -426,10 +440,11 @@ li.innerHTML =
 lista.appendChild(li);
 
 
+
 });
 
 
-}
+};
 
 
 
@@ -438,29 +453,45 @@ lista.appendChild(li);
 
 
 
-// CANCELLA CALENDARIO
+// WHATSAPP
 
-window.cancellaCalendario = async function(id){
-
-
-let conferma =
-confirm("Vuoi cancellare questa partita?");
+window.condividiWhatsApp = async function(){
 
 
+let messaggio =
 
-if(conferma){
+`⚽ Fanta Calcetto
+
+Nuova partita disponibile!
+
+👥 Posti:
+${document.getElementById("posti").textContent}
+
+Prenota qui:
+${window.location.href}`;
 
 
-await deleteDoc(
-doc(db,"calendario",id)
-);
+
+let url =
+
+"https://wa.me/?text="
+
++
+
+encodeURIComponent(messaggio);
 
 
 
-caricaCalendario();
-
-
-}
+window.location.href=url;
 
 
 };
+
+
+
+
+
+
+
+
+//
