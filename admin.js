@@ -277,3 +277,70 @@ alert("✅ Partita aggiornata");
 
 
 };
+// AGGIUNGI PARTITA AL CALENDARIO
+
+window.aggiungiCalendario = async function(){
+
+
+let partita = {
+
+
+data:
+document.getElementById("calData").value,
+
+
+ora:
+document.getElementById("calOra").value,
+
+
+campo:
+document.getElementById("calCampo").value,
+
+
+quota:
+document.getElementById("calQuota").value,
+
+
+creata:
+new Date()
+
+
+};
+
+
+
+if(
+partita.data === "" ||
+partita.ora === "" ||
+partita.campo === ""
+){
+
+alert("Inserisci data, ora e campo");
+
+return;
+
+}
+
+
+
+await addDoc(
+
+collection(db,"calendario"),
+
+partita
+
+);
+
+
+
+alert("✅ Partita aggiunta al calendario");
+
+
+
+document.getElementById("calData").value="";
+document.getElementById("calOra").value="";
+document.getElementById("calCampo").value="";
+document.getElementById("calQuota").value="";
+
+
+};
