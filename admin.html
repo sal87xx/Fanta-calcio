@@ -7,7 +7,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Admin Fanta Calcetto</title>
+<title>Fanta Calcetto</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -17,31 +17,30 @@
 <body>
 
 
-<h1>👑 Admin Fanta Calcetto</h1>
+<div class="logo">
+
+<img src="logo.png" width="100" alt="Logo Fanta Calcetto">
+
+</div>
+
+
+<h1>⚽ Fanta Calcetto</h1>
 
 
 
-<div id="login">
+<!-- CALENDARIO -->
+
+<div class="calendario">
 
 
-<input 
-id="email" 
-type="email" 
-placeholder="Email">
+<h2>📅 Prossime partite</h2>
 
 
-<input 
-id="password" 
-type="password" 
-placeholder="Password">
+<ul id="calendarioPartite">
 
+<li>Caricamento calendario...</li>
 
-
-<button onclick="entra()">
-
-🔐 Entra
-
-</button>
+</ul>
 
 
 </div>
@@ -50,79 +49,86 @@ placeholder="Password">
 
 
 
-<div id="pannello" style="display:none">
+
+<!-- PARTITA ATTUALE -->
+
+
+<div class="partita">
+
+
+<h2>🏟️ Partita</h2>
 
 
 
-<h2>⚽ Modifica partita</h2>
+<div id="infoPartita">
 
+Caricamento partita...
 
-<input id="data" placeholder="Data">
-
-<input id="ora" placeholder="Ora">
-
-<input id="campo" placeholder="Campo">
-
-<input id="quota" placeholder="Quota">
+</div>
 
 
 
-<button onclick="salvaPartita()">
 
-💾 Salva partita
+<h3>
+
+👥 Posti:
+
+<span id="posti">0/10</span>
+
+</h3>
+
+
+
+
+<div id="infoCompleta"></div>
+
+
+
+
+
+<input 
+id="nome"
+type="text"
+placeholder="Inserisci nome">
+
+
+
+
+
+<button onclick="iscriviti()">
+
+✅ Mi iscrivo
 
 </button>
 
 
 
 
-<hr>
 
+<h3>🟢 Convocati</h3>
 
-
-<h2>📅 Aggiungi partita al calendario</h2>
-
-
-<input id="calData" placeholder="Data partita">
-
-<input id="calOra" placeholder="Ora">
-
-<input id="calCampo" placeholder="Campo">
-
-<input id="calQuota" placeholder="Quota">
-
-
-
-<button onclick="aggiungiCalendario()">
-
-➕ Aggiungi calendario
-
-</button>
-
-
-
-
-<h2>📅 Partite in calendario</h2>
-
-<ul id="listaCalendario"></ul>
-
-
-
-
-<h2>👥 Giocatori</h2>
-
-
-
-<h3>✅ Convocati</h3>
 
 <ul id="convocati"></ul>
 
 
 
 
+
 <h3>⏳ Lista d'attesa</h3>
 
+
 <ul id="attesa"></ul>
+
+
+
+
+
+
+<button onclick="condividiWhatsApp()">
+
+📲 Condividi su WhatsApp
+
+</button>
 
 
 
@@ -132,7 +138,7 @@ placeholder="Password">
 
 
 
-<script type="module" src="./admin.js"></script>
+<script type="module" src="app.js"></script>
 
 
 </body>
