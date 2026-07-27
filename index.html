@@ -4,11 +4,19 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Fanta Calcetto</title>
 
+
 <link rel="stylesheet" href="style.css">
+
+
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#0b3d2e">
+
 
 </head>
 
@@ -17,7 +25,9 @@
 
 
 <div class="logo">
+
 <img src="logo.png" width="100" alt="Logo Fanta Calcetto">
+
 </div>
 
 
@@ -64,6 +74,7 @@ type="text"
 placeholder="Inserisci nome">
 
 
+
 <button onclick="iscriviti()">
 
 ✅ Partecipa
@@ -74,11 +85,13 @@ placeholder="Inserisci nome">
 
 <h3>🟢 Convocati</h3>
 
+
 <ul id="convocati"></ul>
 
 
 
 <h3>⏳ Lista d'attesa</h3>
+
 
 <ul id="attesa"></ul>
 
@@ -91,12 +104,28 @@ placeholder="Inserisci nome">
 </button>
 
 
-
 </div>
 
 
 
 <script type="module" src="./app.js"></script>
+
+
+
+<script>
+
+if ("serviceWorker" in navigator) {
+
+window.addEventListener("load", () => {
+
+navigator.serviceWorker.register("sw.js");
+
+});
+
+}
+
+</script>
+
 
 
 </body>
