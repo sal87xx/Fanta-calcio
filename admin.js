@@ -1,15 +1,24 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
 import {
-  getFirestore,
-  collection,
-  getDocs,
-  addDoc,
-  deleteDoc,
-  doc,
-  query,
-  orderBy,
-  updateDoc
+getFirestore,
+collection,
+getDocs,
+deleteDoc,
+doc,
+query,
+orderBy,
+addDoc,
+updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+import {
+getAuth,
+signInWithEmailAndPassword,
+onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
 
 
 const firebaseConfig = {
@@ -19,78 +28,143 @@ const firebaseConfig = {
 };
 
 
+
 const app = initializeApp(firebaseConfig);
+
 const db = getFirestore(app);
 
-
-const passwordAdmin = "1234";
-
+const auth = getAuth(app);
 
 
-// LOGIN ADMIN
-window.entra = function(){
+
+const giocatori = collection(db,"giocatori");
+
+
+
+
+// LOGIN SICURO
+
+window.entra = async function(){
+
+
+let email =
+document.getElementById("email").value;
+
 
 let password =
 document.getElementById("password").value;
 
 
-if(password === passwordAdmin){
 
-document.getElementById("login").style.display="none";
-
-document.getElementById("pannello").style.display="block";
-
-caricaGiocatori();
+try{
 
 
-}else{
+await signInWithEmailAndPassword(
+auth,
+email,
+password
+);
 
-alert("Password errata");
+
+mostraAdmin();
+
 
 }
+
+catch(error){
+
+alert("❌ Email o password errati");
+
+}
+
 
 };
 
 
 
+
+
+// CONTROLLO ACCESSO
+
+onAuthStateChanged(auth,(user)=>{
+
+
+if(user){
+
+mostraAdmin();
+
+}
+
+
+});
+
+
+
+
+
+function mostraAdmin(){
+
+
+document.getElementById("login").style.display="none";
+
+
+document.getElementById("pannello").style.display="block";
+
+
+caricaGiocatori();
+
+
+}
+
+
+
+
+
+
+
 // CARICA GIOCATORI
+
 async function caricaGiocatori(){
 
+
 const elenco = await getDocs(
-query(
-collection(db,"giocatori"),
-orderBy("data")
-)
+query(giocatori,orderBy("data"))
 );
+
 
 
 let convocati =
 document.getElementById("convocati");
+
 
 let attesa =
 document.getElementById("attesa");
 
 
 convocati.innerHTML="";
+
 attesa.innerHTML="";
+
 
 
 elenco.forEach((g)=>{
 
 
-let dati = g.data();
+let dati=g.data();
 
 
-let li = document.createElement("li");
+let li=document.createElement("li");
 
 
 li.innerHTML =
 `
 ${dati.nome}
+
 <button onclick="elimina('${g.id}')">
 ❌
 </button>
 `;
+
 
 
 if(dati.stato==="confermato"){
@@ -104,6 +178,7 @@ attesa.appendChild(li);
 }
 
 
+
 });
 
 
@@ -111,8 +186,12 @@ attesa.appendChild(li);
 
 
 
-// ELIMINA GIOCATORE
+
+
+// ELIMINA
+
 window.elimina = async function(id){
+
 
 await deleteDoc(
 doc(db,"giocatori",id)
@@ -121,31 +200,44 @@ doc(db,"giocatori",id)
 
 caricaGiocatori();
 
+
 };
 
 
 
-// SALVA O AGGIORNA PARTITA
+
+
+
+// SALVA PARTITA
+
 window.salvaPartita = async function(){
 
 
-let dati = {
+
+let dati={
+
 
 nomePartita:"Fanta Calcetto",
+
 
 data:
 document.getElementById("data").value,
 
+
 ora:
 document.getElementById("ora").value,
+
 
 campo:
 document.getElementById("campo").value,
 
+
 quota:
 document.getElementById("quota").value
 
+
 };
+
 
 
 
@@ -164,22 +256,24 @@ dati
 );
 
 
+
 }else{
 
 
-let idPartita =
-elenco.docs[0].id;
-
-
 await updateDoc(
-doc(db,"partita",idPartita),
+
+doc(db,"partita",elenco.docs[0].id),
+
 dati
+
 );
 
 
 }
 
 
-alert("✅ Partita aggiornata!");
+
+alert("✅ Partita aggiornata");
+
 
 };
