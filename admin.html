@@ -20,15 +20,27 @@
 <h1>👑 Admin Fanta Calcetto</h1>
 
 
+
 <div id="login">
 
-<input id="email" type="email" placeholder="Email">
 
-<input id="password" type="password" placeholder="Password">
+<input 
+id="email" 
+type="email" 
+placeholder="Email">
+
+
+<input 
+id="password" 
+type="password" 
+placeholder="Password">
+
 
 
 <button onclick="entra()">
+
 🔐 Entra
+
 </button>
 
 
@@ -37,61 +49,52 @@
 
 
 
+
 <div id="pannello" style="display:none">
 
 
-<h2>⚽ Partita attuale</h2>
+<h2>⚽ Modifica partita</h2>
 
 
-<input id="data" placeholder="Data">
+<input 
+id="data" 
+placeholder="Data">
 
-<input id="ora" placeholder="Ora">
 
-<input id="campo" placeholder="Campo">
+<input 
+id="ora" 
+placeholder="Ora">
 
-<input id="quota" placeholder="Quota">
+
+<input 
+id="campo" 
+placeholder="Campo">
+
+
+<input 
+id="quota" 
+placeholder="Quota">
+
 
 
 <button onclick="salvaPartita()">
-💾 Aggiorna partita
-</button>
 
-
-
-<hr>
-
-
-
-<h2>📅 Aggiungi al calendario</h2>
-
-
-<input id="calData" placeholder="Data partita">
-
-
-<input id="calOra" placeholder="Ora">
-
-
-<input id="calCampo" placeholder="Campo">
-
-
-<script type="module" src="./admin.js"></script>
-
-
-
-<button onclick="aggiungiCalendario()">
-
-➕ Salva nel calendario
+💾 Salva partita
 
 </button>
+
+
 
 
 
 <h2>👥 Giocatori</h2>
 
 
+
 <h3>✅ Convocati</h3>
 
 <ul id="convocati"></ul>
+
 
 
 
@@ -105,8 +108,9 @@
 
 
 
-<script type="module" src="./admin.js"></script>
 
+
+<script type="module" src="./admin.js"></script>
 
 
 </body>
