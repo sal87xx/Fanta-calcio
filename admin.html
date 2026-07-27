@@ -7,7 +7,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fanta Calcetto</title>
+<title>Admin Fanta Calcetto</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -17,87 +17,91 @@
 <body>
 
 
-<div class="logo">
-
-<img src="logo.png" width="100" alt="Logo Fanta Calcetto">
-
-</div>
-
-
-<h1>⚽ Fanta Calcetto</h1>
+<h1>👑 Admin Fanta Calcetto</h1>
 
 
 
-<!-- CALENDARIO -->
-
-<div class="calendario">
+<div id="login">
 
 
-<h2>📅 Prossime partite</h2>
-
-
-<ul id="calendarioPartite">
-
-<li>Caricamento calendario...</li>
-
-</ul>
-
-
-</div>
-
-
-
-
-
-
-<!-- PARTITA ATTUALE -->
-
-
-<div class="partita">
-
-
-<h2>🏟️ Partita</h2>
-
-
-
-<div id="infoPartita">
-
-Caricamento partita...
-
-</div>
-
-
-
-
-<h3>
-
-👥 Posti:
-
-<span id="posti">0/10</span>
-
-</h3>
-
-
-
-
-<div id="infoCompleta"></div>
-
-
-
+<h2>🔐 Accesso Admin</h2>
 
 
 <input 
-id="nome"
-type="text"
-placeholder="Inserisci nome">
+id="email"
+type="email"
+placeholder="Email">
+
+
+<br><br>
+
+
+<input 
+id="password"
+type="password"
+placeholder="Password">
+
+
+<br><br>
+
+
+<button onclick="entra()">
+
+Entra
+
+</button>
+
+
+</div>
 
 
 
 
 
-<button onclick="iscriviti()">
 
-✅ Mi iscrivo
+
+<div id="pannello" style="display:none">
+
+
+
+<h2>⚽ Modifica partita principale</h2>
+
+
+<input 
+id="data"
+placeholder="Data">
+
+
+<br>
+
+
+<input 
+id="ora"
+placeholder="Ora">
+
+
+<br>
+
+
+<input 
+id="campo"
+placeholder="Campo">
+
+
+br>
+
+
+<input 
+id="quota"
+placeholder="Quota">
+
+
+<br><br>
+
+
+<button onclick="salvaPartita()">
+
+💾 Salva partita
 
 </button>
 
@@ -105,30 +109,88 @@ placeholder="Inserisci nome">
 
 
 
-<h3>🟢 Convocati</h3>
+<hr>
 
+
+
+
+
+<h2>📅 Calendario partite</h2>
+
+
+
+<input 
+id="calData"
+placeholder="Data partita">
+
+
+<br>
+
+
+<input 
+id="calOra"
+placeholder="Ora">
+
+
+<br>
+
+
+<input 
+id="calCampo"
+placeholder="Campo">
+
+
+<br>
+
+
+<input 
+id="calQuota"
+placeholder="Quota">
+
+
+<br><br>
+
+
+<button onclick="aggiungiCalendario()">
+
+➕ Aggiungi al calendario
+
+</button>
+
+
+
+
+
+<h3>📋 Partite inserite</h3>
+
+
+<ul id="listaCalendario"></ul>
+
+
+
+
+
+
+<hr>
+
+
+
+
+
+<h2>👥 Gestione giocatori</h2>
+
+
+
+<h3>✅ Convocati</h3>
 
 <ul id="convocati"></ul>
 
 
 
 
-
 <h3>⏳ Lista d'attesa</h3>
 
-
 <ul id="attesa"></ul>
-
-
-
-
-
-
-<button onclick="condividiWhatsApp()">
-
-📲 Condividi su WhatsApp
-
-</button>
 
 
 
@@ -138,7 +200,9 @@ placeholder="Inserisci nome">
 
 
 
-<script type="module" src="app.js"></script>
+
+
+<script type="module" src="./admin.js"></script>
 
 
 </body>
