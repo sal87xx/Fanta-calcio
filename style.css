@@ -1,97 +1,174 @@
-body {
-    font-family: Arial, sans-serif;
-    background: #e8f5e9;
-    margin: 0;
-    padding: 20px;
-    text-align: center;
+body{
+
+font-family: Arial, sans-serif;
+
+background:#0b3d2e;
+
+margin:0;
+
+padding:20px;
+
+text-align:center;
+
+color:white;
+
 }
 
 
-h1 {
-    color: #1b5e20;
-    font-size: 32px;
+.logo img{
+
+border-radius:50%;
+
+background:white;
+
+padding:5px;
+
 }
 
 
-.partita {
-    background: white;
-    max-width: 400px;
-    margin: auto;
-    padding: 20px;
-    border-radius: 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+
+h1{
+
+font-size:32px;
+
 }
 
 
-h2 {
-    color: #2e7d32;
+
+.partita{
+
+background:white;
+
+color:#222;
+
+max-width:450px;
+
+margin:auto;
+
+padding:20px;
+
+border-radius:20px;
+
+box-shadow:0 5px 15px rgba(0,0,0,0.3);
+
 }
 
 
-#infoPartita {
-    background: #f1f8e9;
-    padding: 15px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    font-size: 18px;
+
+#infoPartita{
+
+background:#eeeeee;
+
+padding:15px;
+
+border-radius:15px;
+
+font-size:18px;
+
+margin-bottom:15px;
+
 }
 
 
-#posti {
-    color: #1b5e20;
-    font-size: 22px;
+
+.boxPosti{
+
+background:#0b3d2e;
+
+color:white;
+
+padding:12px;
+
+border-radius:10px;
+
+margin:15px 0;
+
 }
 
 
-input {
-    width: 90%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    font-size: 16px;
+
+input{
+
+width:90%;
+
+padding:12px;
+
+font-size:16px;
+
+border-radius:10px;
+
+border:1px solid #ccc;
+
+margin:5px;
+
 }
 
 
-button {
-    background: #2e7d32;
-    color: white;
-    border: none;
-    padding: 12px 18px;
-    margin: 8px;
-    border-radius: 12px;
-    font-size: 16px;
-    cursor: pointer;
+
+button{
+
+background:#16a34a;
+
+color:white;
+
+border:none;
+
+padding:12px 20px;
+
+border-radius:12px;
+
+font-size:16px;
+
+cursor:pointer;
+
+margin:8px;
+
 }
 
 
-button:hover {
-    background: #1b5e20;
+
+button:hover{
+
+background:#15803d;
+
 }
 
 
-ul {
-    padding: 0;
+
+ul{
+
+list-style:none;
+
+padding:0;
+
 }
 
 
-li {
-    list-style: none;
-    background: #f5f5f5;
-    margin: 8px 0;
-    padding: 12px;
-    border-radius: 10px;
-    font-size: 18px;
+
+li{
+
+background:#f3f4f6;
+
+color:#222;
+
+margin:5px;
+
+padding:10px;
+
+border-radius:10px;
+
 }
 
 
-li button {
-    background: #c62828;
-    padding: 6px 10px;
-    font-size: 14px;
-}
 
+#infoCompleta{
 
-li button:hover {
-    background: #8e0000;
+color:#dc2626;
+
+font-weight:bold;
+
+font-size:18px;
+
+margin:10px;
+
 }
