@@ -22,9 +22,13 @@ onAuthStateChanged
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAkD7WyZj7aq3YXBak6cLT8kKUAAvwbSUY",
-  authDomain: "calcettoapp-b00eb.firebaseapp.com",
-  projectId: "calcettoapp-b00eb",
+
+apiKey: "AIzaSyAkD7WyZj7aq3YXBak6cLT8kKUAAvwbSUY",
+
+authDomain: "calcettoapp-b00eb.firebaseapp.com",
+
+projectId: "calcettoapp-b00eb",
+
 };
 
 
@@ -84,8 +88,6 @@ alert("❌ Email o password errati");
 
 
 
-// CONTROLLO ACCESSO
-
 onAuthStateChanged(auth,(user)=>{
 
 
@@ -141,6 +143,11 @@ let attesa =
 document.getElementById("attesa");
 
 
+
+if(!convocati || !attesa) return;
+
+
+
 convocati.innerHTML="";
 
 attesa.innerHTML="";
@@ -178,7 +185,6 @@ attesa.appendChild(li);
 }
 
 
-
 });
 
 
@@ -188,7 +194,7 @@ attesa.appendChild(li);
 
 
 
-// ELIMINA
+// ELIMINA GIOCATORE
 
 window.elimina = async function(id){
 
@@ -208,7 +214,8 @@ caricaGiocatori();
 
 
 
-// SALVA PARTITA
+
+// SALVA PARTITA ATTUALE
 
 window.salvaPartita = async function(){
 
@@ -277,6 +284,12 @@ alert("✅ Partita aggiornata");
 
 
 };
+
+
+
+
+
+
 // AGGIUNGI PARTITA AL CALENDARIO
 
 window.aggiungiCalendario = async function(){
@@ -338,9 +351,4 @@ alert("✅ Partita aggiunta al calendario");
 
 
 document.getElementById("calData").value="";
-document.getElementById("calOra").value="";
-document.getElementById("calCampo").value="";
-document.getElementById("calQuota").value="";
-
-
-};
+document.getElementById("cal
