@@ -13,17 +13,11 @@ updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-
 const firebaseConfig = {
-
 apiKey: "AIzaSyAkD7WyZj7aq3YXBak6cLT8kKUAAvwbSUY",
-
 authDomain: "calcettoapp-b00eb.firebaseapp.com",
-
 projectId: "calcettoapp-b00eb"
-
 };
-
 
 
 const app = initializeApp(firebaseConfig);
@@ -31,10 +25,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 
-
-const giocatori =
-collection(db,"giocatori");
-
+const giocatori = collection(db,"giocatori");
 
 
 
@@ -43,10 +34,8 @@ collection(db,"giocatori");
 
 window.iscriviti = async function(){
 
-
 let nome =
 document.getElementById("nome").value.trim();
-
 
 
 if(nome===""){
@@ -58,14 +47,11 @@ return;
 }
 
 
-
 const elenco =
 await getDocs(giocatori);
 
 
-
 let confermati=0;
-
 
 
 elenco.forEach((g)=>{
@@ -77,7 +63,6 @@ confermati++;
 }
 
 });
-
 
 
 let stato =
@@ -110,11 +95,9 @@ mostraGiocatori();
 
 
 
-
 // CANCELLA
 
 window.cancella = async function(id){
-
 
 await deleteDoc(
 doc(db,"giocatori",id)
@@ -131,19 +114,19 @@ await promuoviAttesa();
 
 
 
-
 async function promuoviAttesa(){
-
 
 const elenco =
 await getDocs(
-query(giocatori,orderBy("data"))
+query(
+giocatori,
+orderBy("data")
+)
 );
 
 
 
 let confermati=0;
-
 
 
 elenco.forEach((g)=>{
@@ -165,7 +148,6 @@ if(confermati>=10)
 break;
 
 
-
 if(g.data().stato==="attesa"){
 
 
@@ -185,9 +167,7 @@ confermati++;
 
 }
 
-
 }
-
 
 
 mostraGiocatori();
@@ -209,7 +189,10 @@ async function mostraGiocatori(){
 
 const elenco =
 await getDocs(
-query(giocatori,orderBy("data"))
+query(
+giocatori,
+orderBy("data")
+)
 );
 
 
@@ -222,11 +205,9 @@ let attesa =
 document.getElementById("attesa");
 
 
-
 convocati.innerHTML="";
 
 attesa.innerHTML="";
-
 
 
 let confermati=0;
@@ -239,9 +220,7 @@ elenco.forEach((g)=>{
 let dati=g.data();
 
 
-
 let li=document.createElement("li");
-
 
 
 if(dati.stato==="confermato"){
@@ -270,38 +249,16 @@ attesa.appendChild(li);
 
 
 li.innerHTML +=
-`
-<button onclick="cancella('${g.id}')">
-❌
-</button>
-`;
 
+` <button onclick="cancella('${g.id}')">❌</button>`;
 
 
 });
 
 
 
-
 document.getElementById("posti").textContent =
 confermati+"/10";
-
-
-
-if(confermati>=10){
-
-
-document.getElementById("infoCompleta").innerHTML =
-"⚽ Partita completa - Lista d'attesa aperta";
-
-
-}else{
-
-
-document.getElementById("infoCompleta").innerHTML="";
-
-
-}
 
 
 
@@ -314,7 +271,9 @@ document.getElementById("infoCompleta").innerHTML="";
 
 
 
-// PARTITA ATTUALE
+
+
+// PARTITA PRINCIPALE
 
 async function caricaPartita(){
 
@@ -363,14 +322,15 @@ document.getElementById("infoPartita").innerHTML =
 
 
 
-// CALENDARIO PUBBLICO
+
+
+// CALENDARIO COMPLETO
 
 async function caricaCalendario(){
 
 
 let lista =
 document.getElementById("calendarioPartite");
-
 
 
 if(!lista)
@@ -382,9 +342,16 @@ lista.innerHTML="";
 
 
 
-const elenco =
-await getDocs(
-collection(db,"calendario")
+const elenco = await getDocs(
+
+query(
+
+collection(db,"calendario"),
+
+orderBy("data")
+
+)
+
 );
 
 
@@ -395,11 +362,10 @@ if(elenco.empty){
 lista.innerHTML =
 "<li>Nessuna partita programmata</li>";
 
-
 return;
 
-
 }
+
 
 
 
@@ -415,83 +381,5 @@ let li=document.createElement("li");
 
 
 li.innerHTML =
+
 `
-
-📅 ${partita.data}
-
-<br>
-
-🕘 ${partita.ora}
-
-<br>
-
-🏟️ ${partita.campo}
-
-<br>
-
-💰 Quota: ${partita.quota || "-"}
-
-<hr>
-
-`;
-
-
-
-lista.appendChild(li);
-
-
-
-});
-
-
-};
-
-
-
-
-
-
-
-
-// WHATSAPP
-
-window.condividiWhatsApp = async function(){
-
-
-let messaggio =
-
-`⚽ Fanta Calcetto
-
-Nuova partita disponibile!
-
-👥 Posti:
-${document.getElementById("posti").textContent}
-
-Prenota qui:
-${window.location.href}`;
-
-
-
-let url =
-
-"https://wa.me/?text="
-
-+
-
-encodeURIComponent(messaggio);
-
-
-
-window.location.href=url;
-
-
-};
-
-
-
-
-
-
-
-
-//
